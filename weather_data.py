@@ -1,15 +1,10 @@
-# Script for scrapping dynamic bike data from openWeatherMap API
+# Script for scrapping dynamic weather data from openWeatherMap API
 import login
 import pymysql
 import requests
 import time
 import send_email
-
-import logging
 from datetime import datetime
-
-logging.basicConfig(filename='weather.log', level=logging.INFO,
-                    format='%(asctime)s %(message)s')
 
 while True:
     try:
@@ -83,17 +78,13 @@ while True:
                 print(f"Database error: {e}")
                 send_email.email_error(e)
                 # Rollback any changes made to database if there was an error
-                conn.rollback() 
-                break
+                conn.rollback()
 
             # Confirm rows added successfully & log
-            print("Rows inserted successfully!")
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
-            current_date = now.strftime("%Y-%m-%d")
-
-            # log the time, date, and confirmation message
-            logging.info(f"Weather data scraped on {current_date} at {current_time}")
+            current_date = now.strftime("%d-%m-%Y")
+            print(f"Rows inserted successfully on {current_date} at {current_time}")
 
             # Close the connection
             cursor.close()
